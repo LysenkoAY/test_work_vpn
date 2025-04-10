@@ -107,24 +107,6 @@ class _HomePageState extends State<_HomePage> {
                 ),
               ),
           },
-          /*
-          if (status == VPNStatus.connection)
-            Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                SvgPicture.asset('assets/saturn.svg'),
-                AnimatedTextColor(text: 'Подключение'),
-              ],
-            ),
-          if (status == VPNStatus.started)
-            RotateCard(
-              frontCard: SvgPicture.asset('assets/saturn.svg'),
-              backCard: SvgPicture.asset(
-                'assets/saturn.svg',
-                colorFilter: ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
-              ),
-            ),
-          */
           switch (status) {
             VPNStatus.started => FilledButton(
                 onPressed: widget.onStop,

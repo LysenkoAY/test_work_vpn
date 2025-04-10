@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "663379053776",
+    "project_id": "fcmln-31ba7",
+    "storage_bucket": "fcmln-31ba7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663379053776:android:26846e93908cecdb8362d5",
+        "android_client_info": {
+          "package_name": "com.example.fcmln"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGE0QRXwbYBzwKvVJcErX4x_XntmCSsq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663379053776:android:34cdfcdc5a1dc4b88362d5",
+        "android_client_info": {
+          "package_name": "com.example.test_work_vpn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGE0QRXwbYBzwKvVJcErX4x_XntmCSsq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

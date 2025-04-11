@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../bloc/app_bloc.dart';
 
 class VPNStatusModel extends InheritedModel<bool> {
-  const VPNStatusModel({super.key, required this.status, required super.child});
+  const VPNStatusModel({super.key, required this.status, required this.tick, required super.child});
 
   final VPNStatus? status;
+  final int? tick;
 
   static VPNStatusModel? maybeOf(BuildContext context) {
     return InheritedModel.inheritFrom<VPNStatusModel>(context);
@@ -19,6 +20,10 @@ class VPNStatusModel extends InheritedModel<bool> {
 
   static VPNStatus? statusOf(BuildContext context) {
     return InheritedModel.inheritFrom<VPNStatusModel>(context)?.status;
+  }
+
+  static int tickOf(BuildContext context) {
+    return InheritedModel.inheritFrom<VPNStatusModel>(context)?.tick ?? 0;
   }
 
   @override

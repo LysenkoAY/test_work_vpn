@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -19,12 +20,15 @@ part 'app_bloc.freezed.dart';
 @injectable
 class AppBloc extends Bloc<AppEvent, AppState> {
   final Function(VPNStatus status) changeStatus;
+  final Function(int value) changeTick;
 
-  AppBloc({required this.changeStatus}) : super(const AppState.loading()) {
+  AppBloc({required this.changeStatus, required this.changeTick}) : super(const AppState.loading()) {
     on<_InitialEvent>(_onInitial);
     on<_StartEvent>(_onStartEvent);
     on<_StopEvent>(_onStopEvent);
   }
+
+  Timer? watch;
 
   void _onInitial(
     _InitialEvent event,
@@ -40,11 +44,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Future<void> _onStartEvent(_StartEvent event, Emitter<AppState> emit) async {
     changeStatus(VPNStatus.connection);
     await connect();
+    watch = Timer.periodic(Duration(seconds: 1), (time) => changeTick(time.tick));
     startSession = DateTime.now();
     changeStatus(VPNStatus.started);
   }
 
   Future<void> _onStopEvent(_StopEvent event, Emitter<AppState> emit) async {
+    watch?.cancel();
     await stop();
     changeStatus(VPNStatus.stopped);
     await saveStatistics();

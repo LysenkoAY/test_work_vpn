@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,6 +18,7 @@ class BlocHomePage extends StatefulWidget {
 
 class _BlocHomePageState extends State<BlocHomePage> {
   VPNStatus vpnStatus = VPNStatus.stopped;
+  int tick = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +31,11 @@ class _BlocHomePageState extends State<BlocHomePage> {
       body: SafeArea(
         child: VPNStatusModel(
           status: vpnStatus,
+          tick: tick,
           child: BlocProvider<AppBloc>(
             create: (context) => AppBloc(
               changeStatus: (value) => setState(() => vpnStatus = value),
+              changeTick: (value) => setState(() => tick = value),
             )..add(const AppEvent.initial()),
             child: BlocBuilder<AppBloc, AppState>(
               builder: (context, state) => state.maybeWhen(
@@ -67,21 +68,9 @@ class _HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<_HomePage> {
-  Timer? watch;
-  bool animated = false;
-
   @override
   Widget build(BuildContext context) {
     VPNStatus? status = VPNStatusModel.statusOf(context);
-    switch (status) {
-      case VPNStatus.stopped:
-        if (watch != null) watch!.cancel();
-      case VPNStatus.connection:
-      case VPNStatus.started:
-        watch = Timer.periodic(Duration(seconds: 1), (time) => setState(() {}));
-      case null:
-        throw UnimplementedError();
-    }
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +100,6 @@ class _HomePageState extends State<_HomePage> {
             VPNStatus.stopped => FilledButton(
                 onPressed: () {
                   widget.onStart();
-                  setState(() => animated = !animated);
                 },
                 child: Text('Подключиться'),
               ),
@@ -122,7 +110,9 @@ class _HomePageState extends State<_HomePage> {
           },
           const SizedBox(height: 32),
           if (status == VPNStatus.started)
-            Text('Подключен к VPN: ${DateFormat('HH:mm:ss').format(DateTime(0, 0, 0, 0, 0, watch!.tick))}'),
+            Text('Подключен к VPN: ${DateFormat('HH:mm:ss').format(
+              DateTime(0, 0, 0, 0, 0, VPNStatusModel.tickOf(context)),
+            )}'),
         ],
       ),
     );

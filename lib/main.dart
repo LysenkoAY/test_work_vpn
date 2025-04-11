@@ -22,7 +22,7 @@ class VPNApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         ),
-        home: const HomePage(),
+        home: const BlocHomePage(),
       );
     });
   }

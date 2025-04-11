@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,9 +18,9 @@ part 'app_bloc.freezed.dart';
 
 @injectable
 class AppBloc extends Bloc<AppEvent, AppState> {
-  final ValueNotifier<VPNStatus> status;
+  final Function(VPNStatus status) changeStatus;
 
-  AppBloc(this.status) : super(const AppState.loading()) {
+  AppBloc({required this.changeStatus}) : super(const AppState.loading()) {
     on<_InitialEvent>(_onInitial);
     on<_StartEvent>(_onStartEvent);
     on<_StopEvent>(_onStopEvent);
@@ -39,15 +38,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future<void> _onStartEvent(_StartEvent event, Emitter<AppState> emit) async {
-    status.value = VPNStatus.connection;
+    changeStatus(VPNStatus.connection);
     await connect();
     startSession = DateTime.now();
-    status.value = VPNStatus.started;
+    changeStatus(VPNStatus.started);
   }
 
   Future<void> _onStopEvent(_StopEvent event, Emitter<AppState> emit) async {
     await stop();
-    status.value = VPNStatus.stopped;
+    changeStatus(VPNStatus.stopped);
     await saveStatistics();
   }
 
@@ -72,6 +71,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
     final statistic = StatisticModel(id: uuid.v4(), start: startSession, stop: DateTime.now());
     statistics.statistics!.add(statistic);
+
     jsonString = json.encode(statistics.toJson());
     await _storage.write(key: 'sessions', value: jsonString);
 

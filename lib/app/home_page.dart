@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import '../animation/animated_text_color.dart';
 import '../animation/gradient_text_animation.dart';
 import '../animation/rotate_card.dart';
 import '../statistics/statistics_page.dart';
@@ -82,7 +83,7 @@ class _HomePageState extends State<_HomePage> {
                 children: [
                   SvgPicture.asset('assets/saturn.svg'),
                   GradientTextAnimation(text: 'Подключение'),
-                  //AnimatedTextColor(text: 'Подключение'),
+                  //ColorChangingText(word: 'Подключение'),
                 ],
               ),
             VPNStatus.started => RotateCard(

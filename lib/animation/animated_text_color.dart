@@ -1,31 +1,53 @@
 import 'package:flutter/material.dart';
 
-class AnimatedTextColor extends StatefulWidget {
-  const AnimatedTextColor({super.key, required this.text});
+class ColorChangingText extends StatefulWidget {
+  const ColorChangingText({super.key, required this.word});
 
-  final String text;
+  final String word;
 
   @override
-  State<AnimatedTextColor> createState() => _AnimatedTextColorState();
+  State<ColorChangingText> createState() => _ColorChangingTextState();
 }
 
-class _AnimatedTextColorState extends State<AnimatedTextColor> with SingleTickerProviderStateMixin {
-  late AnimationController controller;
+class _ColorChangingTextState extends State<ColorChangingText> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
   late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: Duration(seconds: 4), vsync: this);
-    _colorAnimation = ColorTween(begin: Colors.white, end: Colors.red).animate(controller);
-    controller.forward();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+
+    _colorAnimation = ColorTween(
+      begin: Colors.blue,
+      end: Colors.red,
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      widget.text,
-      style: TextStyle(fontSize: 48, fontWeight: FontWeight.w800, color: _colorAnimation.value),
+    return AnimatedBuilder(
+      animation: _colorAnimation,
+      builder: (context, child) {
+        return Text(
+          widget.word,
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+            color: _colorAnimation.value,
+          ),
+        );
+      },
     );
   }
 }
